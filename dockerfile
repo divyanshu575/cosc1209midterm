@@ -1,16 +1,11 @@
-# Use Amazon Linux 2023 as the base image
-FROM public.ecr.aws/amazonlinux/amazonlinux:2023
+# Use the official NGINX image from Docker Hub
+FROM nginx:alpine
 
-# Install Apache (httpd) and clean up
-RUN yum update -y && \
-    yum install -y httpd && \
-    yum clean all
+# Copy the index.html file to the default NGINX HTML directory
+COPY index.html /usr/share/nginx/html/
 
-# Copy the index.html file to the Apache web server's default document root
-COPY index.html /var/www/html/
-
-# Expose port 80 to allow access to the web server
+# Expose port 80 to make the web server accessible
 EXPOSE 80
 
-# Start the Apache service in the foreground
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+# Start NGINX when the container launches
+CMD ["nginx", "-g", "daemon off;"]
